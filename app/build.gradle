@@ -25,5 +25,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support:design:28.0.0'
+
+    // ObjectBox Data Browser
+//    debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
+//    releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
 }
 apply plugin: 'io.objectbox' // apply last
