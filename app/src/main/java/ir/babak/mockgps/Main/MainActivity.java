@@ -12,11 +12,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +33,7 @@ import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.android.ObjectBoxLiveData;
 import ir.babak.mockgps.Application.MyApp;
+import ir.babak.mockgps.Database.Entitiy.PeriodEntitiy;
 import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
 import ir.babak.mockgps.Location.AddLocationDialog;
 import ir.babak.mockgps.R;
@@ -38,11 +42,19 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recycler_main;
     private Box<PositionsEntitiy> positionBox;
+    private Box<PeriodEntitiy> PeriodBox;
     private FloatingActionButton btnAddNew;
     private List<PositionsEntitiy> list_poses;
     private MenuItem btnStart, btnPause;
+    private TextInputEditText etTime;
     private boolean blStart = false;
     private Timer timer = new Timer();
+    private View parentview;
+    private MockLocationClass mockLocationClass;
+    private int pos = -1;
+    private long mPeriod ;
+    private Handler mHandler = new Handler();
+    private PeriodEntitiy periodEntitiy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     private void getViews() {
         recycler_main = findViewById(R.id.recycler_main);
         btnAddNew = findViewById(R.id.btnAddNewRow);
+        etTime = findViewById(R.id.etTime);
+        parentview = findViewById(android.R.id.content);
+        mockLocationClass = new MockLocationClass(this);
     }
 
     private void setSetting() {
@@ -75,14 +90,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        etTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable!=null && editable.length()>0){
+                    if(periodEntitiy != null)
+                        periodEntitiy.setPeriod(Long.valueOf(editable.toString()));
+                    else
+                        periodEntitiy = new PeriodEntitiy(0,Long.valueOf(editable.toString()));
+
+                    PeriodBox.put(periodEntitiy);
+                }
+            }
+        });
+
     }
 
     private void getData() {
         BoxStore boxStore = ((MyApp) getApplication()).getBoxStore();
         positionBox = boxStore.boxFor(PositionsEntitiy.class);
+        PeriodBox = boxStore.boxFor(PeriodEntitiy.class);
     }
 
     private void setData() {
+
+        periodEntitiy = PeriodBox.get(1);
+
+        if(periodEntitiy==null)
+            periodEntitiy= new PeriodEntitiy(0,5);
+
+        mPeriod = periodEntitiy.Period * 1000;
+
+        etTime.setText(String.valueOf(periodEntitiy.Period));
+
         ObjectBoxLiveData<PositionsEntitiy> live_pos = new ObjectBoxLiveData<>(positionBox.query().build());
         live_pos.observe(this, new Observer<List<PositionsEntitiy>>() {
             @Override
@@ -173,9 +223,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ToggleCommand(){
-        View parentview = findViewById(android.R.id.content);
         if(list_poses==null || list_poses.size()<1){
-            Snackbar.make(parentview,R.string.YouNeedAddSomeLocationBeforStartApp,Snackbar.LENGTH_LONG);
+            Snackbar.make(parentview,R.string.YouNeedAddSomeLocationBeforStartAp,Snackbar.LENGTH_LONG);
             blStart = false;
             return;
         }
@@ -184,20 +233,35 @@ public class MainActivity extends AppCompatActivity {
 
         if(blStart){
            TimerTask updateLocation = new UpdateLocationTask();
-           timer.scheduleAtFixedRate(updateLocation,200,10000);
+           timer.scheduleAtFixedRate(updateLocation,200,1*1000);
+            start();
         }else {
             timer.cancel();
             LocationManager locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             try {
                 locMgr.removeTestProvider(LocationManager.GPS_PROVIDER);
             } catch (Exception e) {
+                Snackbar.make(parentview,e.toString(),Snackbar.LENGTH_LONG);
                 e.printStackTrace();
             }
         }
     }
 
+    private void start(){
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(pos >= (list_poses.size()-1))
+                    pos=0;
+                else
+                    pos++;
+
+                mHandler.postDelayed(this, mPeriod);
+            }
+        });
+    }
+
     class UpdateLocationTask extends TimerTask {
-        int pos;
 
         @Override
         public void run() {
@@ -205,48 +269,13 @@ public class MainActivity extends AppCompatActivity {
             if(list_poses==null || list_poses.size()<1)
                 return;
 
-            if(pos>=list_poses.size())
-                pos=0;
-            else
-                pos++;
-
             PositionsEntitiy positionsEntitiy = list_poses.get(pos);
             Log.i("Timer",positionsEntitiy.toString());
-            setMock(positionsEntitiy.getLat(),positionsEntitiy.getLng(),20);
+
+            mockLocationClass.setMock(positionsEntitiy.getLat(),positionsEntitiy.getLng(),20);
         }
     }
 
-
-    private void setMock(double latitude, double longitude, float accuracy) {
-        LocationManager locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locMgr.addTestProvider (LocationManager.GPS_PROVIDER,
-                "requiresNetwork" == "",
-                "requiresSatellite" == "",
-                "requiresCell" == "",
-                "hasMonetaryCost" == "",
-                "supportsAltitude" == "",
-                "supportsSpeed" == "",
-                "supportsBearing" == "",
-                android.location.Criteria.POWER_LOW,
-                android.location.Criteria.ACCURACY_FINE);
-
-        Location newLocation = new Location(LocationManager.GPS_PROVIDER);
-
-        newLocation.setLatitude(latitude);
-        newLocation.setLongitude(longitude);
-        newLocation.setAccuracy(accuracy);
-        newLocation.setAltitude(0);
-        newLocation.setAccuracy(500);
-        newLocation.setTime(System.currentTimeMillis());
-        newLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-
-        locMgr.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
-
-        locMgr.setTestProviderStatus(LocationManager.GPS_PROVIDER,
-                LocationProvider.AVAILABLE,
-                null,System.currentTimeMillis());
-
-        locMgr.setTestProviderLocation(LocationManager.GPS_PROVIDER, newLocation);}
 
 
 }

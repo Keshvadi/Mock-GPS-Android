@@ -8,7 +8,8 @@
     <string name="play">Start</string>
     <string name="Pause">Pause</string>
     <string name="Start">Start</string>
-    <string name="YouNeedAddSomeLocationBeforStartApp">You Need Add Some Location Befor You Can Start Mocking Your Device</string>
+    <string name="YouNeedAddSomeLocationBeforStartAp">You Need Add Some Location Befor You Can Start Mocking Your Device</string>
     <string name="KEY_PARCABLE_POSITION">ParcablePosition</string>
     <string name="Edit">Edit</string>
+    <string name="ChangeLocatinoEvry">Change Location Every X Second</string>
 </resources>
