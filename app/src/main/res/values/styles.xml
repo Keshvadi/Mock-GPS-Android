@@ -15,6 +15,11 @@
     </style>
 
 
+    <style name="Widget.Main.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/TextAppearanceTextView_Title</item>
+    </style>
+
+
     <style name="TextViewStyle_Value" parent="AppTheme">
         <item name="android:textAppearance">@style/TextAppearanceTextView_Value</item>
     </style>
