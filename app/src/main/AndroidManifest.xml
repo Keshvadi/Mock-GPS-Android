@@ -3,6 +3,7 @@
     package="ir.babak.mockgps">
 
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".Application.MyApp"

@@ -12,4 +12,5 @@
     <string name="KEY_PARCABLE_POSITION">ParcablePosition</string>
     <string name="Edit">Edit</string>
     <string name="ChangeLocatinoEvry">Change Location Every X Second</string>
+    <string name="Import">Import Locations</string>
 </resources>

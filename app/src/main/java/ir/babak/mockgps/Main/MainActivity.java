@@ -2,9 +2,11 @@ package ir.babak.mockgps.Main;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -25,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,6 +38,7 @@ import io.objectbox.android.ObjectBoxLiveData;
 import ir.babak.mockgps.Application.MyApp;
 import ir.babak.mockgps.Database.Entitiy.PeriodEntitiy;
 import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
+import ir.babak.mockgps.Database.Setting.ImportDataClass;
 import ir.babak.mockgps.Location.AddLocationDialog;
 import ir.babak.mockgps.R;
 
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private long mPeriod ;
     private Handler mHandler = new Handler();
     private PeriodEntitiy periodEntitiy;
+    private ImportDataClass importDataClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,8 +192,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnStart:
                 startCommand();
                 return true;
+            case R.id.btnImport:
+                ImportCommand();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void ImportCommand(){
+        importDataClass = new ImportDataClass(this);
+        importDataClass.ChoiceFileDialog();
     }
 
     @Override
@@ -277,5 +291,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == getResources().getInteger(R.integer.RESULT_LOAD_IMAGE) && resultCode == RESULT_OK && null != data) {
+             Uri selectedJson = data.getData();
+            List<PositionsEntitiy> list_pos = importDataClass.ReadFile(selectedJson);
+            if(list_pos!=null){
+                positionBox.put(list_pos);
+            }
+        }
+    }
 }

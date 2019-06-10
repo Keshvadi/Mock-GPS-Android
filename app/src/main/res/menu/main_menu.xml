@@ -13,4 +13,12 @@
         android:icon="@drawable/ic_pause_circle_filled_black_24dp"
         app:showAsAction="always"
         android:title="@string/Pause" />
+
+
+
+    <item
+        android:id="@+id/btnImport"
+        android:icon="@drawable/ic_import_export_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/Import" />
 </menu>
