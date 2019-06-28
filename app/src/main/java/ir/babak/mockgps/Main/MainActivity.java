@@ -2,6 +2,7 @@ package ir.babak.mockgps.Main;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -15,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -195,8 +197,32 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnImport:
                 ImportCommand();
                 return true;
+            case R.id.btnClear:
+                btnClearCommand();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void btnClearCommand(){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        positionBox.removeAll();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
 
@@ -265,9 +291,10 @@ public class MainActivity extends AppCompatActivity {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if(pos >= (list_poses.size()-1))
-                    pos=0;
-                else
+                if(pos >= (list_poses.size()-1)) {
+                    Snackbar.make(parentview,R.string.YouRichTheEndOfTheLis,Snackbar.LENGTH_LONG);
+                    pos = 0;
+                }else
                     pos++;
 
                 mHandler.postDelayed(this, mPeriod);
@@ -284,8 +311,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
 
             PositionsEntitiy positionsEntitiy = list_poses.get(pos);
-            Log.i("Timer",positionsEntitiy.toString());
 
+            Snackbar.make(parentview,positionsEntitiy.toString(),Snackbar.LENGTH_LONG);
             mockLocationClass.setMock(positionsEntitiy.getLat(),positionsEntitiy.getLng(),20);
         }
     }

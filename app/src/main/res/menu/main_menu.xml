@@ -17,6 +17,11 @@
 
 
     <item
+        android:id="@+id/btnClear"
+        android:icon="@drawable/ic_clear_all_black_24dp"
+        app:showAsAction="never"
+        android:title="@string/Clear" />
+    <item
         android:id="@+id/btnImport"
         android:icon="@drawable/ic_import_export_black_24dp"
         app:showAsAction="never"

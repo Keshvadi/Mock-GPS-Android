@@ -13,4 +13,6 @@
     <string name="Edit">Edit</string>
     <string name="ChangeLocatinoEvry">Change Location Every X Second</string>
     <string name="Import">Import Locations</string>
+    <string name="Clear">Clear</string>
+    <string name="YouRichTheEndOfTheLis">You Reach on The End Of List, Application Going To Repeat List From Beginning</string>
 </resources>

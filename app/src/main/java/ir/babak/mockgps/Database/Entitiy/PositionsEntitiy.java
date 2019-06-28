@@ -13,11 +13,11 @@ public class PositionsEntitiy implements Parcelable {
     public double lat;
     public double lng;
 
-    public PositionsEntitiy(){
+    public PositionsEntitiy() {
 
     }
 
-    public PositionsEntitiy(long id,double lat,double lng){
+    public PositionsEntitiy(long id, double lat, double lng) {
         this.id = id;
         this.lat = lat;
         this.lng = lng;
@@ -79,13 +79,8 @@ public class PositionsEntitiy implements Parcelable {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "id=" + id +
-                ", lat='" + lat + '\'' +
-                ", lng=" + lng +
-                '}';
+        return "Position Change To{" + "id=" + id + ", lat='" + lat + '\'' + ", lng=" + lng + '}';
     }
-
 
 
 }
