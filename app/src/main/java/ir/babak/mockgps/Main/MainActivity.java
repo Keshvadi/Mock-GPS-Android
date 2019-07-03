@@ -1,5 +1,8 @@
 package ir.babak.mockgps.Main;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.net.URI;
 import java.util.List;
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getViews();
         setSetting();
         getData();
@@ -292,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if(pos >= (list_poses.size()-1)) {
-                    Snackbar.make(parentview,R.string.YouRichTheEndOfTheLis,Snackbar.LENGTH_LONG);
+                    restStartFromBeging(R.string.YouRichTheEndOfTheLis);
                     pos = 0;
                 }else
                     pos++;
@@ -302,12 +306,40 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void restStartFromBeging(int MessageId){
+        Snackbar.make(parentview,MessageId,Snackbar.LENGTH_LONG).show();
+        showNotification(getString(MessageId));
+
+    }
+    private void showNotification(String eventtext) {
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, MainActivity.class);
+        // use System.currentTimeMillis() to have a unique ID for the pending intent
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+
+        // build notification
+        // the addAction re-use the same intent to keep the example short
+        Notification n  = new Notification.Builder(this)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(eventtext)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true)
+                .build();
+
+        notificationManager.notify(0, n);
+    }
+
+
+
+
     class UpdateLocationTask extends TimerTask {
 
         @Override
         public void run() {
             Log.i("Timer","Tick");
-            if(list_poses==null || list_poses.size()<1)
+            if(list_poses==null || list_poses.size()<pos)
                 return;
 
             PositionsEntitiy positionsEntitiy = list_poses.get(pos);
