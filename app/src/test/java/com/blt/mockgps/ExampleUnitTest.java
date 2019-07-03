@@ -1,4 +1,4 @@
-package ir.babak.mockgps;
+package com.blt.mockgps;
 
 import org.junit.Test;
 

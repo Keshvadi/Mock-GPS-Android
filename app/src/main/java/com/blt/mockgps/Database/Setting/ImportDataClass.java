@@ -1,39 +1,21 @@
-package ir.babak.mockgps.Database.Setting;
+package com.blt.mockgps.Database.Setting;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import ir.babak.mockgps.Database.Entitiy.PeriodEntitiy;
-import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
-import ir.babak.mockgps.R;
+import com.blt.mockgps.Database.Entitiy.PositionsEntitiy;
+import com.blt.mockgps.R;
 
 public class ImportDataClass {
 

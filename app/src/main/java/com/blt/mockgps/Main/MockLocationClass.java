@@ -1,10 +1,9 @@
-package ir.babak.mockgps.Main;
+package com.blt.mockgps.Main;
 
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;

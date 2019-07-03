@@ -1,7 +1,5 @@
-package ir.babak.mockgps.Main;
+package com.blt.mockgps.Main;
 
-import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,15 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
-import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
-import ir.babak.mockgps.Location.EditLocationDialog;
-import ir.babak.mockgps.Location.ShowLocationDialog;
-import ir.babak.mockgps.R;
+import com.blt.mockgps.Database.Entitiy.PositionsEntitiy;
+import com.blt.mockgps.Location.EditLocationDialog;
+import com.blt.mockgps.Location.ShowLocationDialog;
+import com.blt.mockgps.R;
 
 
 public class PositionAdapter extends RecyclerView.Adapter<PositionAdapter.ViewHolder> {

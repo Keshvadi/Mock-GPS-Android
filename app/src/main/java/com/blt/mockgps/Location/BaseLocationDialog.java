@@ -1,4 +1,4 @@
-package ir.babak.mockgps.Location;
+package com.blt.mockgps.Location;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
-import ir.babak.mockgps.R;
+import com.blt.mockgps.Database.Entitiy.PositionsEntitiy;
+import com.blt.mockgps.R;
 
 public class BaseLocationDialog extends DialogFragment {
 

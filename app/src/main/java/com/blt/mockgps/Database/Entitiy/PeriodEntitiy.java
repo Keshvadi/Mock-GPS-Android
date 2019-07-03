@@ -1,7 +1,4 @@
-package ir.babak.mockgps.Database.Entitiy;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.blt.mockgps.Database.Entitiy;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;

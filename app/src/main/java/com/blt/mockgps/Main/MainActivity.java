@@ -1,4 +1,4 @@
-package ir.babak.mockgps.Main;
+package com.blt.mockgps.Main;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,13 +7,9 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -33,7 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,12 +36,12 @@ import java.util.TimerTask;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.android.ObjectBoxLiveData;
-import ir.babak.mockgps.Application.MyApp;
-import ir.babak.mockgps.Database.Entitiy.PeriodEntitiy;
-import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
-import ir.babak.mockgps.Database.Setting.ImportDataClass;
-import ir.babak.mockgps.Location.AddLocationDialog;
-import ir.babak.mockgps.R;
+import com.blt.mockgps.Application.MyApp;
+import com.blt.mockgps.Database.Entitiy.PeriodEntitiy;
+import com.blt.mockgps.Database.Entitiy.PositionsEntitiy;
+import com.blt.mockgps.Database.Setting.ImportDataClass;
+import com.blt.mockgps.Location.AddLocationDialog;
+import com.blt.mockgps.R;
 
 public class MainActivity extends AppCompatActivity {
 

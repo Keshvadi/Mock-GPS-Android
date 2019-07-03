@@ -1,12 +1,12 @@
-package ir.babak.mockgps.Application;
+package com.blt.mockgps.Application;
 
 import android.app.Application;
 import android.util.Log;
 
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
-import ir.babak.mockgps.BuildConfig;
-import ir.babak.mockgps.Database.Entitiy.MyObjectBox;
+import com.blt.mockgps.BuildConfig;
+import com.blt.mockgps.Database.Entitiy.MyObjectBox;
 
 public class MyApp extends Application {
 

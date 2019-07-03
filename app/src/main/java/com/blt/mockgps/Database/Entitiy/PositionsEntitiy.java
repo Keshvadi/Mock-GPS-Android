@@ -1,4 +1,4 @@
-package ir.babak.mockgps.Database.Entitiy;
+package com.blt.mockgps.Database.Entitiy;
 
 import android.os.Parcel;
 import android.os.Parcelable;

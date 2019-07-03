@@ -1,11 +1,11 @@
-package ir.babak.mockgps.Location;
+package com.blt.mockgps.Location;
 
 import android.view.View;
 
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
-import ir.babak.mockgps.Application.MyApp;
-import ir.babak.mockgps.Database.Entitiy.PositionsEntitiy;
+import com.blt.mockgps.Application.MyApp;
+import com.blt.mockgps.Database.Entitiy.PositionsEntitiy;
 
 
 public class AddLocationDialog extends BaseLocationDialog {
