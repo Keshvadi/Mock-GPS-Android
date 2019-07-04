@@ -104,8 +104,9 @@ public class BackGroundTaskService extends Service {
     }
 
     private void restStartFromBeging(int MessageId){
-        try{Toast.makeText(getApplicationContext(),MessageId,Toast.LENGTH_LONG).show();}catch (Exception e){e.printStackTrace();}
-        showNotification(getString(MessageId));
+        Log.i(TAG,getString(MessageId));
+//        try{Toast.makeText(getApplicationContext(),MessageId,Toast.LENGTH_LONG).show();}catch (Exception e){e.printStackTrace();}
+//        showNotification(getString(MessageId));
     }
 
     private void showNotification(String eventtext) {
