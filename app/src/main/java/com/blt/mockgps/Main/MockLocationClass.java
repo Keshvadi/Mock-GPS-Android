@@ -7,26 +7,27 @@ import android.location.LocationProvider;
 import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import static android.location.LocationManager.GPS_PROVIDER;
 
 public class MockLocationClass {
 
-    private View parentview;
-    private AppCompatActivity appCompatActivity;
+    private Context context;
+    private String TAG = MockLocationClass.class.getSimpleName();
 
-    public MockLocationClass(AppCompatActivity appCompatActivity){
-        this.appCompatActivity = appCompatActivity;
-        parentview = appCompatActivity.findViewById(android.R.id.content);
+    public MockLocationClass(Context context){
+        this.context = context;
     }
 
     public void setMock(double latitude, double longitude, float accuracy) {
 
         try {
+            Log.i(TAG,"Location Change Command");
 
-            LocationManager locMgr = (LocationManager)
-                    appCompatActivity.getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locMgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
             locMgr.addTestProvider(GPS_PROVIDER,
                     "requiresNetwork" == "",
@@ -57,10 +58,14 @@ public class MockLocationClass {
 
             locMgr.setTestProviderLocation(GPS_PROVIDER, newLocation);
 
+            try{
+                String strMessage = "latitude: "+latitude+"\n longitude: "+ longitude;
+                Log.i(TAG,strMessage);
+            }catch (Exception e){e.printStackTrace();}
+
         } catch (Exception e) {
             e.printStackTrace();
-            Snackbar.make(parentview, e.toString(), Snackbar.LENGTH_LONG);
-
+            try{Toast.makeText(context,e.toString(),Toast.LENGTH_LONG).show();}catch (Exception ex){ex.printStackTrace();}
         }
     }
 

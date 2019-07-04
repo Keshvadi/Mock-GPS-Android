@@ -42,6 +42,7 @@ import com.blt.mockgps.Database.Entitiy.PositionsEntitiy;
 import com.blt.mockgps.Database.Setting.ImportDataClass;
 import com.blt.mockgps.Location.AddLocationDialog;
 import com.blt.mockgps.R;
+import com.blt.mockgps.Services.BackGroundTaskService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,12 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem btnStart, btnPause;
     private TextInputEditText etTime;
     private boolean blStart = false;
-    private Timer timer = new Timer();
-    private View parentview;
-    private MockLocationClass mockLocationClass;
-    private int pos = -1;
-    private long mPeriod ;
-    private Handler mHandler = new Handler();
+
+
     private PeriodEntitiy periodEntitiy;
     private ImportDataClass importDataClass;
 
@@ -79,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         recycler_main = findViewById(R.id.recycler_main);
         btnAddNew = findViewById(R.id.btnAddNewRow);
         etTime = findViewById(R.id.etTime);
-        parentview = findViewById(android.R.id.content);
-        mockLocationClass = new MockLocationClass(this);
     }
 
     private void setSetting() {
@@ -135,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         if(periodEntitiy==null)
             periodEntitiy= new PeriodEntitiy(0,5);
 
-        mPeriod = periodEntitiy.Period * 1000;
+
 
         etTime.setText(String.valueOf(periodEntitiy.Period));
 
@@ -252,97 +247,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void startCommand(){
         blStart = true;
-        ToggleCommand();
+        startService(new Intent(this, BackGroundTaskService.class));
         checkPlayPasue();
     }
     private void pauseCommand(){
         blStart = false;
-        ToggleCommand();
+        stopService(new Intent(this, BackGroundTaskService.class));
         checkPlayPasue();
     }
 
-    private void ToggleCommand(){
-        if(list_poses==null || list_poses.size()<1){
-            Snackbar.make(parentview,R.string.YouNeedAddSomeLocationBeforStartAp,Snackbar.LENGTH_LONG);
-            blStart = false;
-            return;
-        }
 
-
-
-        if(blStart){
-           TimerTask updateLocation = new UpdateLocationTask();
-           timer.scheduleAtFixedRate(updateLocation,200,1*1000);
-            start();
-        }else {
-            timer.cancel();
-            LocationManager locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            try {
-                locMgr.removeTestProvider(LocationManager.GPS_PROVIDER);
-            } catch (Exception e) {
-                Snackbar.make(parentview,e.toString(),Snackbar.LENGTH_LONG);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void start(){
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if(pos >= (list_poses.size()-1)) {
-                    restStartFromBeging(R.string.YouRichTheEndOfTheLis);
-                    pos = 0;
-                }else
-                    pos++;
-
-                mHandler.postDelayed(this, mPeriod);
-            }
-        });
-    }
-
-    private void restStartFromBeging(int MessageId){
-        Snackbar.make(parentview,MessageId,Snackbar.LENGTH_LONG).show();
-        showNotification(getString(MessageId));
-
-    }
-    private void showNotification(String eventtext) {
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, MainActivity.class);
-        // use System.currentTimeMillis() to have a unique ID for the pending intent
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-
-        // build notification
-        // the addAction re-use the same intent to keep the example short
-        Notification n  = new Notification.Builder(this)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(eventtext)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .build();
-
-        notificationManager.notify(0, n);
-    }
-
-
-
-
-    class UpdateLocationTask extends TimerTask {
-
-        @Override
-        public void run() {
-            Log.i("Timer","Tick");
-            if(list_poses==null || list_poses.size()<pos)
-                return;
-
-            PositionsEntitiy positionsEntitiy = list_poses.get(pos);
-
-            Snackbar.make(parentview,positionsEntitiy.toString(),Snackbar.LENGTH_LONG);
-            mockLocationClass.setMock(positionsEntitiy.getLat(),positionsEntitiy.getLng(),20);
-        }
-    }
 
 
     @Override
