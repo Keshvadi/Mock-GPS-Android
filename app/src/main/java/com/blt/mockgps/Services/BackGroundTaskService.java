@@ -28,6 +28,7 @@ import io.objectbox.BoxStore;
 
 public class BackGroundTaskService extends Service {
 
+    private String TAG = BackGroundTaskService.class.getSimpleName();
     private static Timer timer = new Timer();
     private MockLocationClass mockLocationClass;
     private static int pos = -1;
@@ -73,7 +74,7 @@ public class BackGroundTaskService extends Service {
 
     private void ToggleCommand(){
         if(list_poses==null || list_poses.size()<1){
-           try{Toast.makeText(getApplicationContext(),R.string.YouNeedAddSomeLocationBeforStartAp,Toast.LENGTH_LONG).show();}catch (Exception e){e.printStackTrace();}
+          Log.e(TAG,getString( R.string.YouNeedAddSomeLocationBeforStartAp));
             return;
         }
 

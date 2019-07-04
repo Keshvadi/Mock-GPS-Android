@@ -17,9 +17,24 @@ public class MockLocationClass {
 
     private Context context;
     private String TAG = MockLocationClass.class.getSimpleName();
+    private LocationManager locMgr;
 
     public MockLocationClass(Context context){
         this.context = context;
+
+        locMgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        locMgr.addTestProvider(GPS_PROVIDER,
+                "requiresNetwork" == "",
+                "requiresSatellite" == "",
+                "requiresCell" == "",
+                "hasMonetaryCost" == "",
+                "supportsAltitude" == "",
+                "supportsSpeed" == "",
+                "supportsBearing" == "",
+                android.location.Criteria.POWER_LOW,
+                android.location.Criteria.ACCURACY_FINE);
+
     }
 
     public void setMock(double latitude, double longitude, float accuracy) {
@@ -27,34 +42,21 @@ public class MockLocationClass {
         try {
             Log.i(TAG,"Location Change Command");
 
-            LocationManager locMgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-            locMgr.addTestProvider(GPS_PROVIDER,
-                    "requiresNetwork" == "",
-                    "requiresSatellite" == "",
-                    "requiresCell" == "",
-                    "hasMonetaryCost" == "",
-                    "supportsAltitude" == "",
-                    "supportsSpeed" == "",
-                    "supportsBearing" == "",
-                    android.location.Criteria.POWER_LOW,
-                    android.location.Criteria.ACCURACY_FINE);
 
             Location newLocation = new Location(GPS_PROVIDER);
 
+            newLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
             newLocation.setLatitude(latitude);
             newLocation.setLongitude(longitude);
             newLocation.setAccuracy(accuracy);
             newLocation.setAltitude(0);
             newLocation.setAccuracy(500);
             newLocation.setTime(System.currentTimeMillis());
-            newLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
 
             locMgr.setTestProviderEnabled(GPS_PROVIDER, true);
 
-            locMgr.setTestProviderStatus(GPS_PROVIDER,
-                    LocationProvider.AVAILABLE,
-                    null, System.currentTimeMillis());
+            locMgr.setTestProviderStatus(GPS_PROVIDER, LocationProvider.AVAILABLE,null, System.currentTimeMillis());
 
             locMgr.setTestProviderLocation(GPS_PROVIDER, newLocation);
 
@@ -65,7 +67,6 @@ public class MockLocationClass {
 
         } catch (Exception e) {
             e.printStackTrace();
-            try{Toast.makeText(context,e.toString(),Toast.LENGTH_LONG).show();}catch (Exception ex){ex.printStackTrace();}
         }
     }
 
